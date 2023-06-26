@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+  <title>Quiz - Testando suas habilidades de Humanas e Exatas</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #0d47a1;
+      color: black;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      font-size: 5em;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .question {
+      margin-bottom: 20px;
+    }
+
+    .question h2 {
+      font-size: 24px;
+      margin-top: 0;
+    }
+
+    .options {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .options li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .options li:hover {
+      background-color: #eee;
+    }
+
+    .options input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    .submit-btn {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .submit-btn button {
+      padding: 10px 20px;
+      background-color: #ff4081;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    #button-home {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0 0 0;
+    }
+ #home {
+    background-color: #ff4081;
+    border-radius: 5px;
+      cursor: pointer;
+      justify-content: center;
+}
+    .submit-btn button:hover {
+      background-color: #e91e63;
+    }
+    
+    #intro {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    
+    #intro h3 {
+        font-size: 3em;
+    }
+    
+    #intro p {
+        font-size: 1.5em;
+    }
+    
+    #intro input {
+        padding: 20px;
+    }
+    
+    #intro input {
+        font-size: 2em;
+    }
+    
+    #button-home > button {
+        padding: 50px;
+        font-size: 1.5em;
+        border-radius: 30px;
+    }
+    
+    .reset-counter {
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    .result-message {
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    .animation {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 32px;
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0); }
+    }
+    
+    @media screen and (min-width: 768px) and (max-width: 992px) {
+    
+    
+    
+   }
+   
+   @media screen and (min-width: 992px) and (max-width: 1200px) {
+       
+      .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+       
+   }
+   
+   @media screen and (min-width: 1200px) {
+       
+      .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+       
+   }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Quiz - Testando suas habilidades de Humanas e Exatas</h2>
+
+    <div id="intro">
+      <h3>Bem-vindo ao Quiz!</h3>
+      <p>Antes de começar, por favor, digite seu nome:</p>
+      <input value="" type="text" id="nameInput">
+      <div id="button-home">
+      <button type="button" onclick="startQuiz()" id="home">Iniciar Quiz</button>
+      </div>
+    </div>
+
+    <div id="quiz" style="display: none;">
+      <div class="question">
+        <h2></h2>
+        <ul class="options">
+        </ul>
+      </div>
+
+      <div class="submit-btn">
+        <button type="button" onclick="checkAnswer()">Enviar Resposta</button>
+      </div>
+    </div>
+    
+    <div class="reset-counter" id="resetCounter" style="display: none;">
+      <p>Quantidade de Resets: <span id="resetCount">0</span></p>
+    </div>
+    
+    <div class="result-message" id="resultMessage" style="display: none;">
+      <h2>Quiz Finalizado!</h2>
+      <p id="message"></p>
+    </div>
+    
+    <div class="animation">
+      Sou Dev &lt;/&gt;
+    </div>
+  </div>
+
+  <script>
+    let resetCount = 0;
+    let currentQuestion = 1;
+    let playerName = "";
+    const questions = [
+      {
+        question: "As planícies são caracterizadas como relevos de baixa altitude, pouco acidentados e onde predomina o processo de acumulação de sedimentos. De acordo com a origem dos sedimentos, as planícies podem ser de quais tipos?",
+        options: [
+          { text: "Vulcânica, litorânea e erosiva", isCorrect: false },
+          { text: "De água doce, de água marinha e terrestre", isCorrect: false },
+          { text: "Costeira, fluvial e lacustre", isCorrect: true },
+          { text: "Desertas, arenosas e lateralizada", isCorrect: false }
+        ]
+      },
+      {
+        question: "Sobre o território brasileiro, assinale a alternativa INCORRETA:",
+        options: [
+          { text: "O Brasil é um país com dimensões continentais.", isCorrect: false },
+          { text: "A grande variação de latitudes explica a homogeneidade climática do país.", isCorrect: true },
+          { text: "A extensão do território brasileiro denuncia a grande distância de seus pontos extremos.", isCorrect: false }          
+        ]
+      },
+       {
+        question: "Sobre o território brasileiro, assinale a alternativa INCORRETA:",
+        options: [
+          { text: "o Brasil é um país com dimensões continentais.", isCorrect: false },
+          { text: "a extensão do território brasileiro denuncia a grande distância de seus pontos extremos.", isCorrect: false },
+          { text: "a localização do Brasil indica-se por longitudes negativas, no hemisfério ocidental.", isCorrect: false },
+          { text: "a grande variação de latitudes explica a homogeneidade climática do país.", isCorrect: true }                    
+        ]
+      },
+      {
+        question: "O trabalho obrigatório que o servo deveria realizar nas terras do senhor feudal foi chamado de:",
+        options: [
+          { text: "Talha.", isCorrect: false },
+          { text: "Tostão de Pedro.", isCorrect: false },
+          { text: "Corveia.", isCorrect: true },
+          { text: "Banalidades.", isCorrect: false },
+          { text: "Mão Morta.", isCorrect: false }                    
+        ]
+      },
+       {
+        question: "Qual foi o primeiro país a ser anexado pela Alemanha Nazista na década de 1930?",
+        options: [
+          { text: "Checoslováquia.", isCorrect: false },
+          { text: "Polônia.", isCorrect: false },
+          { text: "Áustria.", isCorrect: true },
+          ]
+      },
+      {
+        question: "Um concurso para preencher 200 vagas recebeu 1600 inscrições. Quantos candidatos há para cada vaga?",
+        options: [
+          { text: "4", isCorrect: false },
+          { text: "6", isCorrect: false },
+          { text: "8", isCorrect: true },
+          { text: "10", isCorrect: false },
+          { text: "12", isCorrect: false }                    
+        ]
+      },
+      {
+        question: "Qual opção fornece um par de ángulos complementar um ao outro?",
+        options: [
+          { text: "40° e 20°", isCorrect: false },
+          { text: "60° e 40°", isCorrect: false },
+          { text: "120° e 60°", isCorrect: false },
+          { text: "75° e 15°", isCorrect: true },
+          { text: "300° e 60°", isCorrect: false }                    
+        ]
+      },
+      {
+        question: "João emprestou ao seu irmão R$ 30,00. Após alguns dias ele recebeu R$ 22,50 de volta, mas seu irmão precisou novamente de sua ajuda e ele the entregou outros R$ 15,00. Mais tarde, o irmão de João lhe devolveu R$ 19.50 Quanto o irmão ainda the deve?",
+        options: [
+          { text: "R$ 2,50", isCorrect: false },
+          { text: "R$ 5,50", isCorrect: false },
+          { text: "R$ 3,00", isCorrect: true },
+          { text: "R$ 4,50", isCorrect: false },
+          { text: "R$ 6,50", isCorrect: false }                    
+        ]
+      },
+      {
+        question: "Dos números abaixo, marque aquele que possui uma raz quadrada exata",
+        options: [
+          { text: "600", isCorrect: false },
+          { text: "215", isCorrect: false },
+          { text: "144", isCorrect: true },
+          { text: "110", isCorrect: false },
+          { text: "70", isCorrect: false }                    
+        ]
+      },
+      {
+        question: "Todos os seres vivos estabelecem relações uns com os outros. Essas interações são chamadas de relações ecológicas. A sociedade é um tipo de relação ecológica em que",
+        options: [
+          { text: "organismos de espécies diferentes estabelecem divisão de trabalho e trabalham juntos em prol do sucesso da comunidade.", isCorrect: false },
+          { text: "organismos de uma mesma espécie estão unidos anatomicamente e trabalham de modo cooperativo.", isCorrect: false },
+          { text: "organismos de espécies diferentes associam-se anatomicamente e estabelecem divisão de trabalho.", isCorrect: false },
+          { text: "organismo de uma mesma espécie organizam-se de modo que todos os organismos trabalhem de maneira cooperativa.", isCorrect: true },
+          { text: "organismos de uma mesma espécie associam-se nos momentos de captura de presas.", isCorrect: false }                    
+        ]
+      },
+      {
+        question: "Ao se sair molhado em local aberto, mesmo em dias quentes, sente-se uma sensação de frio. Esse fenômeno está relacionado com a evaporação da água que, no caso, está em contato com o corpo humano.Essa sensação de frio explica-se corretamente pelo fato de que a evaporação da água:",
+        options: [
+          { text: "Talha.", isCorrect: false },
+          { text: "é um processo endotérmico e cede calor ao corpo.", isCorrect: false },
+          { text: "é um processo endotérmico e retira calor do corpo.", isCorrect: true },
+          { text: "é um processo exotérmico e retira calor do corpo.", isCorrect: true },
+          { text: "é um processo exotérmico e cede calor ao corpo.", isCorrect: false }                            
+        ]
+      },
+      {
+        question: "Considere as seguintes afirmações:\n\nI. Uma função é uma relação que associa a cada elemento do seu domínio um único elemento no seu contradomínio.\n\nII. Toda relação é uma função.\n\nIII. Dada uma função sobrejetora, então seu contradomínio é diferente de sua imagem.\n\nIV. Uma função será injetora se, e somente se, elementos distintos do domínio possuírem imagens distintas.\n\nAssinale a alternativa correta:",
+  options: [
+    { text: "I, II e III estão corretas.", isCorrect: false },
+    { text: "I e II estão corretas.", isCorrect: false },
+    { text: "III e I estão corretas.", isCorrect: false },
+    { text: "II, III e IV estão corretas.", isCorrect: false },
+    { text: "I e IV estão corretas.", isCorrect: true }
+    ]
+      },
+      {
+        question: "O liberalismo e o socialismo são correntes econômicas, políticas e sociais que visam criar um modelo justo e democrático para ao desenvolvimento da sociedade. A principal diferença entre o liberalismo e o socialismo é:",
+        options: [
+          { text: "o papel do Estado em relação à economia.", isCorrect: true },
+          { text: "a participação democrática.", isCorrect: false },
+          { text: "o direito à liberdade de expressão.", isCorrect: false },
+          { text: "a intenção garantir o bem-estar.", isCorrect: false }
+        ]
+      },
+      {
+        question: "A radioatividade emitida por determinadas amostras de substâncias provém",
+        options: [
+          { text: "da energia térmica liberada em sua combustão.", isCorrect: false },
+          { text: "de rupturas de ligações químicas entre os átomos que as formam.", isCorrect: false },
+          { text: "de alterações em núcleos de átomos que as formam.", isCorrect: true },
+          { text: "do escape de elétrons das eletrosferas de átomos que as formam.", isCorrect: false },
+          { text: "da reorganização de átomos que ocorre em sua decomposição.", isCorrect: false }                    
+        ]
+      },
+      {
+        question: "Qual é a velocidade escalar média, em km/h, de uma pessoa que percorre a pé 1200 m em 20 min?",
+        options: [
+          { text: "4,8", isCorrect: false },
+          { text: "3,6", isCorrect: true },
+          { text: "2,7", isCorrect: false },
+          { text: "2,1", isCorrect: false },
+          { text: "1,2", isCorrect: false }                    
+        ]
+      },
+       {
+        question: "Analise as afirmativas a seguir em relação aos impactos provocados pelas atividades humanas:\n\nI. A queima de combustíveis fósseis e o aumento da produção de lixo e esgotos contribuem para provocar o fenômeno denominado efeito estufa.\n\nII. O CO2 é produzido durante a queima incompleta de moléculas orgânicas pelos motores de automóveis e sua combinação com a hemoglobina impede o transporte de oxigênio.\n\nIII. A poluição da atmosfera por óxidos de enxofre e de nitrogênio liberados pela queima de carvão mineral e óleo diesel pode resultar em chuvas ácidas.\n\nIV. O lançamento de esgotos no mar sem tratamento prévio pode ocasionar a “maré vermelha”, fenômeno causado por bactérias que liberam substâncias tóxicas na água.\n\nV. A utilização de agrotóxicos nas lavouras pode poluir o solo e as águas dos rios, onde intoxicam e matam diversos seres vivos.\n\nCom base nas afirmativas apresentadas, assinale a alternativa CORRETA:",
+  options: [
+    { text: "apenas as afirmativas I e III estão corretas.", isCorrect: false },
+    { text: "apenas as afirmativas III e V estão corretas.", isCorrect: false },
+    { text: "apenas as afirmativas I, II e IV estão corretas.", isCorrect: false },
+    { text: "apenas as afirmativas I, III e V estão corretas.", isCorrect: true }
+    ]
+      },
+    ];
+
+    function startQuiz() {
+      playerName = document.getElementById('nameInput').value.trim();
+      
+      if (playerName !== "") {
+        document.getElementById('intro').style.display = "none";
+        document.getElementById('quiz').style.display = "block";
+        showNextQuestion();
+      }
+    }
+
+    function checkAnswer() {
+      const selectedOption = document.querySelector('input[name="answer"]:checked');
+      
+      if (selectedOption) {
+        const questionIndex = currentQuestion - 1;
+        const question = questions[questionIndex];
+        const selectedAnswer = selectedOption.value === "true";
+        
+        if (selectedAnswer === question.options.find(option => option.isCorrect).isCorrect) {
+          if (currentQuestion === questions.length) {
+            // Fim do Quiz
+            showResult();
+          } else {
+            // Avança para a próxima pergunta
+            currentQuestion++;
+            showNextQuestion();
+          }
+        } else {
+          // Resposta incorreta
+          resetCount++;
+          document.getElementById('resetCount').textContent = resetCount;
+          shuffleOptions(questionIndex);
+        }
+      }
+    }
+
+    function shuffleOptions(questionIndex) {
+      const options = questions[questionIndex].options;
+      const ul = document.querySelector('.options');
+      
+      // Embaralha as alternativas
+      for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
+      }
+      
+      // Atualiza as alternativas exibidas na tela
+      ul.innerHTML = "";
+      options.forEach((option, index) => {
+        const li = document.createElement('li');
+        const input = document.createElement('input');
+        input.type = "radio";
+        input.name = "answer";
+        input.value = option.isCorrect;
+        li.appendChild(input);
+        li.appendChild(document.createTextNode(option.text));
+        ul.appendChild(li);
+      });
+    }
+
+    function showNextQuestion() {
+      const questionIndex = currentQuestion - 1;
+      const question = questions[questionIndex];
+      
+      document.querySelector('.question h2').textContent = question.question;
+      shuffleOptions(questionIndex);
+    }
+    
+    function showResult() {
+      document.getElementById('quiz').style.display = "none";
+      document.getElementById('resetCounter').style.display = "block";
+      document.getElementById('resultMessage').style.display = "block";
+      
+      const message = document.getElementById('message');
+      message.textContent = `Parabéns, ${playerName}! Você finalizou o quiz com sucesso.`;
+      
+      if (resetCount > 0) {
+        message.textContent += ` Você precisou resetar ${resetCount} vez(es) para chegar até aqui.`;
+      }
+    }
+  </script>
+</body>
+</html>
